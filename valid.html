@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Test if a Prüfer Code is Valid</title>
+<script type="text/javascript" >
+function check()	{
+	var code = document.getElementsByName("code")[0].value;
+	
+	//make sure there are only numbers, spaces, and commas in the input
+	if (code.match(/^[0-9, ]+$/) == null)	{
+		alert("Please only enter numbers and commas in your Prufer sequence");
+		return;
+	}
+
+	//a Prufer code is invalid if it contains entries whose values are > ((number of entries) + 2)
+	
+	//determine number of entries
+	entries = code.split(",");
+	length = entries.length;
+	
+	for (i = 0; i < length; i++)	{
+		if (entries[i] > (length + 2))	{
+			alert("invalid prufer code");
+			return;
+		}
+	}
+	
+	alert("The code you entered, " + code + ", is a valid Prufer sequence.");
+}
+</script>
+</head>
+<body>
+<p>Please enter a Prufer Code into the field below.  Please put a comma (,) between items of the sequence.  Click Check, and this page will tell you if the Prufer sequence you entered is valid or invalid.</p>
+<p>
+<input type="text" name="code" />
+<br />
+<button onClick="check()">Check</button>
+</body>
+</html>
