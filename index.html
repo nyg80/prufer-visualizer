@@ -1,0 +1,179 @@
+<html>
+<head>
+<title>Prufer Code Visualizer</title>
+<script type="text/javascript">
+function isValid(code)	{
+	if (code.match(/^[0-9, ]+$/) == null)	{
+		return false;
+	}
+	
+	entries = code.split(",");
+	length = entries.length;
+	
+	for (i = 0; i < length; i++)	{
+		if (entries[i] > (length + 2))	{
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+sortObj = function(obj, type, caseSensitive) {
+  var temp_array = [];
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (!caseSensitive) {
+        key = (key['toLowerCase'] ? key.toLowerCase() : key);
+      }
+      temp_array.push(key);
+    }
+  }
+  if (typeof type === 'function') {
+    temp_array.sort(type);
+  } else if (type === 'value') {
+    temp_array.sort(function(a,b) {
+      var x = obj[a];
+      var y = obj[b];
+      if (!caseSensitive) {
+        x = (x['toLowerCase'] ? x.toLowerCase() : x);
+        y = (y['toLowerCase'] ? y.toLowerCase() : y);
+      }
+      return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+  } else {
+    temp_array.sort();
+  }
+  var temp_obj = {};
+  for (var i=0; i<temp_array.length; i++) {
+    temp_obj[temp_array[i]] = obj[temp_array[i]];
+  }
+  return temp_obj;
+};
+
+function genData(code)	{
+
+	entries = code.split(",");
+	length = entries.length;
+	
+	//go through code, create mapping of entry -> # of occurrences
+	
+	var mapping = new Array();
+	
+	for (i = 0; i < length; i++)	{
+		if (entries[i] in mapping)	{
+			//already have this value in our mapping, increase its count
+			mapping[entries[i]]++;
+		} else	{
+			mapping[entries[i]] = 1;
+		}
+	}
+	
+	
+	//go through code, create the text for each entry, leave blanks for the names of 
+	//the children, and also leave blanks for the two nodes not in the Prufer code
+	
+	//example of data format:
+	//(from http://blog.pixelingene.com/2011/07/building-a-tree-diagram-in-d3-js/)
+	
+	/*
+	
+	var treeData = {
+		name: "origin",
+		contents:	[
+			{
+				name: "level1",
+				contents:	[
+					{name: "level2" },
+					{name: "level2a" }
+				]
+			},
+			{
+				name: "level1a",
+				contents:	[
+					{name: "level2b"},
+					{name: "level2c",
+					contents:	[
+						{name: "level3"}
+					]
+					}
+				]
+			}
+		]
+	}
+	
+	*/
+	
+	//use the highest degree vertex as the "top level" node
+	
+	var sortable = [];
+	for (var key in mapping)	{
+		if (mapping.hasOwnProperty(key))	{
+//			sortable.push([key : mapping[key]]);		
+//			sortable[key] = mapping[key];
+		}
+	}
+	
+	var mLength = mapping.length;
+	
+	for (i in mapping)	{
+		sortable[i] = mapping[i];
+	}
+	console.log(mapping);
+	console.log(sortable);
+//	sortable.sort(function(a,b) {return b - a});
+
+//	Object.keys(sortable).sort(function(a,b) {return - (sortable[b] - sortable[a])});
+
+	sortObj(sortable, 'value');
+
+	for (key in mapping)	{
+		if (mapping.hasOwnProperty(key))	{
+			console.log(key + " -> " + mapping[key]);
+		}
+	}	
+	
+	for (var key in sortable)	{
+		if (sortable.hasOwnProperty(key))	{
+			console.log(key + " -> " + sortable[key]);
+//			alert(key + " -> " + sortable[key]);
+		}
+	}
+	
+	
+	/*
+	for (var key in mapping)	{
+		if (mapping.hasOwnProperty(key))	{
+			alert(key + " -> " + mapping[key]);
+		}
+	}
+	*/
+	
+}
+
+function callGen()	{
+	var code = document.getElementsByName("code")[0].value;
+	
+	genData(code);
+}
+
+/*
+stretch goals:
+- rather than the D3 tree layout stuff, make a version of this that lets the end user organize the nodes
+	into an arbitrary shape - square, circle, rows, etc - and then draw the tree on those vertices
+- similar to above, but allow the end user to click through the various steps of the algorithm so that
+	they can really see how it works
+- similar to the first bullet point, but allow the user to click and place the vertices as they want, and
+	to label them arbitrarily as well
+*/
+
+</script>
+</head>
+<body>
+<!-- load the d3.js library -->	
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<input type="text" name="code" />
+<button onClick="callGen()">Test</button>
+</body>
+</html>
