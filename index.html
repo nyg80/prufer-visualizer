@@ -61,6 +61,7 @@ function genData(code)	{
 	var mapping = new Array();
 	
 	for (i = 0; i < length; i++)	{
+		entries[i] = parseInt(entries[i]);
 		if (entries[i] in mapping)	{
 			//already have this value in our mapping, increase its count
 			mapping[entries[i]]++;
@@ -149,6 +150,43 @@ function genData(code)	{
 	}
 	*/
 	
+	//go through the hand algorithm of building the graph from the code
+
+	//first, create our list of node labels
+	//this will be 1 through (# of entries in code + 2)
+	var nodes = [];
+	for (var k = 1; k <= length; k++)	{
+		nodes.push(k);
+	}
+	//console.log(nodes);
+
+	//duplicate the code, to have our list of code Nodes
+	var cNodes = entries.slice(0);
+	
+	//data structure to contain 
+	
+	
+	//find smallest value in nodes that is NOT in cNodes
+	//this value is a "leaf" or "child" of the first remaining element of cNodes
+	for (var m = 0; m < nodes.length; m++)	{
+		if (! ( cNodes.contains(nodes[m]) ) )	{
+			console.log("doesn't have " + nodes[m]);
+			
+			break;
+		}
+	}
+	
+}
+
+//taken from http://stackoverflow.com/q/1181575/3731570
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] == obj) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function callGen()	{
