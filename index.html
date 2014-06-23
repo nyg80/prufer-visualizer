@@ -163,7 +163,7 @@ function genData(code)	{
 	//duplicate the code, to have our list of code Nodes
 	var cNodes = entries.slice(0);
 	
-	//data structure to contain 
+	//need data structure to contain parent/child relationships
 	
 	
 	//find smallest value in nodes that is NOT in cNodes
@@ -171,10 +171,12 @@ function genData(code)	{
 	for (var m = 0; m < nodes.length; m++)	{
 		if (! ( cNodes.contains(nodes[m]) ) )	{
 			console.log("doesn't have " + nodes[m]);
-			
+			nextLeaf = nodes[m];
 			break;
 		}
 	}
+	
+	//cNodes[0] has nextLeaf as a child
 	
 }
 
